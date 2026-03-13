@@ -1,0 +1,17 @@
+# Node_modules (ignora le librerie di frontend e backend)
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# File di ambiente (MAI caricare le password del DB su GitHub!)
+.env
+backend/.env
+frontend/.env
+
+# File di build di React
+frontend/dist/
+frontend/build/
+
+# File di sistema operativo
+.DS_Store
+Thumbs.db

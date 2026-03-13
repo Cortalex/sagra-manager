@@ -1,0 +1,23 @@
+Sagra Manager
+
+======Requisiti Funzionali======
+
+- Gestione Prodotti: Inserimento, modifica, eliminazione
+- Gestione Categorie: Inserimento, modifica, eliminazione
+- Gestione Prodotti in Categorie
+- Creazione Ordine: Piatti, numero persona, numero tavolo, nome, metodo di pagamento, totale, resto, note, asporto
+- Gestione Ordini: Eliminazione, Visualizzazione, stato (Ordinato, in preparazione, Evaso), ristampa, esportazione
+- Gestione Ingredienti: Inserimento, modifica, eliminazione
+- Gestione Magazzino: quantità ingredienti
+- Stampa scontrino-comande basate su pagine HTML+js
+- Server-Client
+- Riassunto Serate
+- Configurazione Salvabile Json
+- Server Web: Monitor Cucina che mostra piatti ordinati divisi per categorie
+- Associazione Ordine-Tavolo tramite pagina su smartphone
+
+=====Requisiti Non Funzionali======
+
+- Rete locale Lan-WIFI no internet
+- Concorrenza Database, 2 ordini in contemporanea non rompono tutto
+- Interfaccia Pulita
