@@ -7,27 +7,29 @@ exports.getCategorie = async (req, res) => {
         res.json(result.rows);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ errore: "Errore del server" });
+        res.status(500).json({ errore: "Errore del server per tabella Categorie" });
     }
 };
 
 // Insert
 exports.createCategoria = async (req, res) => {
     try {
-        // req.body contiene i dati inviati dal frontend
         const { nome_categoria, visibile } = req.body; 
-        
+        if (!nome_categoria || nome_categoria.trim() === "") {
+            return res.status(400).json({ errore: "Il nome categoria è obbligatorio" });
+        }
+
         const result = await pool.query(
             'INSERT INTO categorie (nome_categoria, visibile) VALUES ($1, $2) RETURNING *',
-            [nome_categoria, visibile]
+            [nome_categoria, visibile !== undefined ? visibile : true] 
         );
         res.status(201).json(result.rows[0]);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ errore: "Errore durante la creazione" });
+        if (err.code === '23505') return res.status(409).json({ errore: "Questa categoria esiste già" });
+        res.status(500).json({ errore: "Errore durante la creazione della categoria" });
     }
 };
-
 
 // Update
 exports.updateCategoria = async (req, res) => {
@@ -35,20 +37,15 @@ exports.updateCategoria = async (req, res) => {
         const { id } = req.params;
         const { nome_categoria, visibile } = req.body;
         
-        // Eseguiamo l'UPDATE
         const result = await pool.query(
-            'UPDATE categorie SET nome_categoria = $1, visibile = $2 WHERE id = $3 RETURNING *',
+            'UPDATE categorie SET nome_categoria = COALESCE($1, nome_categoria), visibile = COALESCE($2, visibile) WHERE id = $3 RETURNING *',
             [nome_categoria, visibile, id]
         );
-
-        // Se non trova nessuna riga con quell'ID
-        if (result.rows.length === 0) {
-            return res.status(404).json({ errore: "Categoria non trovata" });
-        }
-
-        res.json(result.rows[0]); // Restituisce la riga aggiornata
+        if (result.rows.length === 0) return res.status(404).json({ errore: "Categoria non trovata" });
+        res.json(result.rows[0]);
     } catch (err) {
         console.error(err.message);
+        if (err.code === '23505') return res.status(409).json({ errore: "Questa categoria esiste già" });
         res.status(500).json({ errore: "Errore durante l'aggiornamento" });
     }
 };
@@ -57,7 +54,6 @@ exports.updateCategoria = async (req, res) => {
 exports.deleteCategoria = async (req, res) => {
     try {
         const { id } = req.params;
-        
         const result = await pool.query('DELETE FROM categorie WHERE id = $1 RETURNING *', [id]);
 
         if (result.rows.length === 0) {
@@ -67,6 +63,7 @@ exports.deleteCategoria = async (req, res) => {
         res.json({ messaggio: "Categoria eliminata con successo!" });
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ errore: "Impossibile eliminare. La Categoria è in uso?" });
+        if (err.code === '23503') return res.status(409).json({ errore: "Impossibile eliminare: ci sono articoli collegati a questa categoria." });
+        res.status(500).json({ errore: "Errore durante l'eliminazione" });
     }
 };
