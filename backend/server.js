@@ -1,13 +1,30 @@
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config(); // Carica il file .env
+const http = require('http'); 
+const { Server } = require('socket.io');
+
+// Carica il file .env
+require('dotenv').config();
 
 const app = express();
+
+//Webserver
+const server = http.createServer(app);
+
+const io = new Server(server, {
+    cors: { origin: "*" } // In produzione metterai l'IP esatto per sicurezza
+});
+
+
 const PORT = 5000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use((req, res, next) => {
+    req.io = io;
+    next();
+});
 
 const categorieRoutes = require('./routes/categorie');
 const zoneRoutes = require('./routes/zone');
@@ -30,7 +47,15 @@ app.use('/api/righe-ordine', righeOrdineRoutes);
 app.use('/api/articolo-ingredienti', articoloIngredientiRoutes);
 
 
-app.listen(PORT, () => {
-    console.log(`Server Sagra Manager avviato su http://localhost:${PORT}`);
+io.on('connection', (socket) => {
+    console.log(`Nuovo dispositivo connesso al WebSocket (Monitor): ${socket.id}`);
+    
+    socket.on('disconnect', () => {
+        console.log(`Dispositivo disconnesso: ${socket.id}`);
+    });
+});
+
+server.listen(PORT, () => {
+    console.log(`Server Sagra Manager + WebSockets avviato su http://localhost:${PORT}`);
     console.log(`Premi CTRL+C nel terminale per spegnerlo.`);
 });

@@ -12,50 +12,57 @@ exports.getOrdini = async (req, res) => {
     }
 };
 
-// Insert
+// Insert (Transazione SQL: o tutto o niente)
 exports.createOrdine = async (req, res) => {
+    const client = await pool.connect(); 
+
     try {
-        const { 
-            progressivo_giorno, nome_cliente, coperti, numero_tavolo, note, 
-            metodo_pagamento, totale, resto, serata, date, ora, 
-            stato, stampato, asporto, omaggio, id_sconto 
-        } = req.body; 
+        const { progressivo_giorno, numero_tavolo, coperti, totale, metodo_pagamento, righe } = req.body;
+        
+        await client.query('BEGIN'); 
 
-        // Query d'inserimento con gestione dei default
-        const query = `
-            INSERT INTO ordini (
-                progressivo_giorno, nome_cliente, coperti, numero_tavolo, note, 
-                metodo_pagamento, totale, resto, serata, date, ora, 
-                stato, stampato, asporto, omaggio, id_sconto
-            ) VALUES (
-                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16
-            ) RETURNING *`;
+        const queryOrdine = `
+            INSERT INTO ordini (progressivo_giorno, numero_tavolo, coperti, totale, metodo_pagamento) 
+            VALUES ($1, $2, $3, $4, $5) RETURNING id`;
+        
+        const resOrdine = await client.query(queryOrdine, [progressivo_giorno, numero_tavolo, coperti, totale, metodo_pagamento]);
+        
+        const idOrdineNuovo = resOrdine.rows[0].id;
 
-        const values = [
-            progressivo_giorno || null,
-            nome_cliente || null,
-            coperti || 0,
-            numero_tavolo || null,
-            note || '',
-            metodo_pagamento || null,
-            totale || 0,
-            resto || 0,
-            serata || null,
-            date || new Date().toISOString().split('T')[0], // data di oggi se non passata
-            ora || new Date().toLocaleTimeString('it-IT', { hour12: false }), // ora attuale
-            stato || 'nuovo',           // Default ENUM
-            stampato !== undefined ? stampato : false, // Default false
-            asporto !== undefined ? asporto : false,   // Default false
-            omaggio !== undefined ? omaggio : false,   // Default false
-            id_sconto || null
-        ];
+        const queryRiga = `
+            INSERT INTO righe_ordine (id_ordine, id_articolo, quantita, prezzo_unitario, note) 
+            VALUES ($1, $2, $3, $4, $5)`;
 
-        const result = await pool.query(query, values);
-        res.status(201).json(result.rows[0]);
+        for (let riga of righe) {
+            await client.query(queryRiga, [
+                idOrdineNuovo, 
+                riga.id_articolo, 
+                riga.quantita, 
+                riga.prezzo_unitario, 
+                riga.note || ''
+            ]);
+        }
+
+        await client.query('COMMIT'); 
+        
+        // Manda al Monitor Cucina l'ID del nuovo ordine
+        req.io.emit('nuovo_ordine_cucina', { 
+            messaggio: "Nuovo ordine in arrivo!",
+            id_ordine: idOrdineNuovo 
+        });
+
+        res.status(201).json({ 
+            messaggio: "Ordine e righe salvati con successo!", 
+            id_ordine: idOrdineNuovo 
+        });
 
     } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ errore: "Errore durante la creazione dell'ordine" });
+
+        await client.query('ROLLBACK'); 
+        console.error("Errore salvataggio ordine completo:", err.message);
+        res.status(500).json({ errore: "Errore durante il salvataggio dell'ordine completo." });
+    } finally {
+        client.release(); 
     }
 };
 
