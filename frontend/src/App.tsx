@@ -6,13 +6,13 @@ import { Route, Routes } from 'react-router';
 import { HomePage } from './pages/home/HomePage';
 import { SettingsPage } from './pages/settings/SettingsPage';
 import { AdminPage } from './pages/admin/AdminPage';
-import { ModeSelect } from './components/ModeSelect';
+import { Header } from './components/Header';
 
 function App() {
 
   return (
     <>
-      <ModeSelect/>
+      <Header />
       <Routes>
           <Route path="/" element={<HomePage />}/>
           <Route path="/settings" element={<SettingsPage />}/>

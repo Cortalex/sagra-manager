@@ -4,7 +4,8 @@ export function SettingsPage() {
     
     return (
         <>
-            <p>Settings page</p>
+            <title>Settings</title>
+            <div>SETTINGS</div>
         </>
     );
 }

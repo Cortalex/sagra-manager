@@ -4,7 +4,8 @@ export function HomePage() {
 
   return (
     <>
-      <p>Home page</p>
+      <title>Home</title>
+      <div>HOME</div>
     </>
   )
 }
