@@ -21,7 +21,6 @@ export function ScontiPage() {
 
     const [sconti, setSconti] = useState<Sconto[]>([]);
 
-    // 🔹 stati per modifica
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editedSconto, setEditedSconto] = useState<Partial<Sconto>>({});
 
@@ -48,7 +47,6 @@ export function ScontiPage() {
         alert(messaggioErrore);
     };
 
-    // 🔹 INSERT
     const handleInsert = async () => {
         if (!nome.trim() || !tipo.trim()) {
             alert("Nome e tipo sono obbligatori");
@@ -82,7 +80,6 @@ export function ScontiPage() {
         }
     };
 
-    // 🔹 DELETE
     const handleDelete = async (id: number) => {
         if (!window.confirm("Sei sicuro di voler eliminare questo sconto?")) return;
 
@@ -94,7 +91,7 @@ export function ScontiPage() {
         }
     };
 
-    // 🔹 EDIT
+    // EDIT
     const startEdit = (sconto: Sconto) => {
         setEditingId(sconto.id || null);
         setEditedSconto({ ...sconto });

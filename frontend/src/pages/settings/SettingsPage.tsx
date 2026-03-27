@@ -1,4 +1,3 @@
-//import { ModeSelect } from "../../components/ModeSelect";
 import { Header } from '../../components/Header';
 import { ConfigurazionePage } from './ConfigurazionePage';
 

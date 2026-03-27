@@ -17,7 +17,6 @@ export function IngredientiPage() {
 
     const [ingredienti, setIngredienti] = useState<Ingrediente[]>([]);
 
-    // 🔹 stati per modifica
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editedNome, setEditedNome] = useState<string>('');
     const [editedPrezzo, setEditedPrezzo] = useState<number>(0);
@@ -83,7 +82,7 @@ export function IngredientiPage() {
         }
     };
 
-    // 🔹 EDIT
+    // EDIT
     const startEdit = (ing: Ingrediente) => {
         setEditingId(ing.id || null);
         setEditedNome(ing.nome_ingrediente);

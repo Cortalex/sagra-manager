@@ -14,13 +14,11 @@ export function CategoriePage() {
     const [loading, setLoading] = useState<boolean>(false);
     const [categorie, setCategorie] = useState<Categoria[]>([]);
 
-    // 🔹 stati per modifica
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editedName, setEditedName] = useState<string>('');
 
     const API_URL = 'http://localhost:5000/api/categorie';
 
-    // 🔹 fetchCategorie wrapped in useCallback
     const fetchCategorie = useCallback(async () => {
         try {
             const response = await axios.get(API_URL);
@@ -28,11 +26,11 @@ export function CategoriePage() {
         } catch (err) {
             handleAxiosError(err, "Errore nel caricamento categorie");
         }
-    }, []); // vuoto → non cambia mai
+    }, []);
 
     useEffect(() => {
         fetchCategorie();
-    }, [fetchCategorie]); // adesso ESLint è felice
+    }, [fetchCategorie]);
 
     const handleAxiosError = (err: unknown, defaultMsg: string) => {
         let messaggioErrore = defaultMsg;
@@ -55,7 +53,7 @@ export function CategoriePage() {
 
             setNome('');
             setVisibile(true);
-            fetchCategorie(); // chiama la funzione aggiornata
+            fetchCategorie();
         } catch (err) {
             handleAxiosError(err, "Errore durante l'invio");
         } finally {
@@ -83,7 +81,7 @@ export function CategoriePage() {
         }
     };
 
-    // 🔹 EDIT
+    // EDIT
     const startEdit = (cat: Categoria) => {
         setEditingId(cat.id || null);
         setEditedName(cat.nome_categoria);

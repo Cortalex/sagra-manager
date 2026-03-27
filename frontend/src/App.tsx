@@ -1,9 +1,5 @@
-//import axios from 'axios';
-//import { getApiUrl } from '../src/utils/config';
-//import { Articolo } from '../src/utils/types';
 import './App.css';
 import { Route, Routes } from 'react-router';
-//import { useState } from 'react';
 import { HomePage } from './pages/home/HomePage';
 import { SettingsPage } from './pages/settings/SettingsPage';
 import { AdminPage } from './pages/admin/AdminPage';

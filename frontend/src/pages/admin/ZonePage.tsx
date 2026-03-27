@@ -12,7 +12,7 @@ export function ZonePage() {
     const [loading, setLoading] = useState<boolean>(false);
     const [zone, setZone] = useState<Zona[]>([]);
 
-    // 🔹 stati edit
+    // stati edit
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editedName, setEditedName] = useState<string>('');
 
@@ -69,7 +69,7 @@ export function ZonePage() {
         }
     };
 
-    // 🔹 EDIT
+    // EDIT
     const startEdit = (zona: Zona) => {
         setEditingId(zona.id || null);
         setEditedName(zona.nome_zona);

@@ -1,4 +1,3 @@
-//import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router";
 import './ModeSelect.css';
 
@@ -14,7 +13,6 @@ export const ModeSelect: React.FC = () => {
     if (selected === "admin") navigate("/admin");
   };
 
-  // 👇 questo è il punto chiave
   const getValueFromPath = () => {
     if (location.pathname === "/") return "home";
     if (location.pathname.startsWith("/settings")) return "settings";
