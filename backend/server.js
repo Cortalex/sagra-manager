@@ -3,6 +3,10 @@ const cors = require('cors');
 const http = require('http'); 
 const { Server } = require('socket.io');
 
+const fs = require('fs');
+const path = require('path');
+const pool = require('./config/db');
+
 // Carica il file .env
 require('dotenv').config();
 
@@ -55,7 +59,23 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(PORT, () => {
-    console.log(`Server Sagra Manager + WebSockets avviato su http://localhost:${PORT}`);
-    console.log(`Premi CTRL+C nel terminale per spegnerlo.`);
+const initDatabase = async () => {
+    try {
+        console.log('Controllo stato del database in corso...');
+        const sqlPath = path.join(__dirname, 'database', 'init.sql'); 
+        const sqlString = fs.readFileSync(sqlPath, 'utf8');
+        
+        await pool.query(sqlString);
+        console.log('Tabelle verificate/create con successo!');
+    } catch (err) {
+        console.error('Errore critico durante la creazione delle tabelle:', err.message);
+        process.exit(1); 
+    }
+};
+
+initDatabase().then(() => {
+    server.listen(PORT, () => {
+        console.log(`Server Sagra Manager + WebSockets avviato su http://localhost:${PORT}`);
+        console.log(`Premi CTRL+C nel terminale per spegnerlo.`);
+    });
 });
