@@ -6,8 +6,10 @@ export interface Configurazione {
 
 export interface Articolo {
     id: number;
-    nome: string;
+    nome_articolo: string;
     prezzo: number;
+    id_categoria: string;
+    id_zona: string;
 }
 
 export interface RigaOrdinePayload {

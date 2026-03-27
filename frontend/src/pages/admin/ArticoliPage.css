@@ -1,0 +1,9 @@
+.top-interface-container {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.top-interface-container button {
+    margin-left: auto;
+}
