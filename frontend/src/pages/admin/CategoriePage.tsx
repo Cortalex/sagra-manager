@@ -56,7 +56,6 @@ export function CategoriePage() {
             setNome('');
             setVisibile(true);
             fetchCategorie();
-            alert("Categoria inserita!");
         } catch (err) {
             handleAxiosError(err, "Errore durante l'invio");
         } finally {

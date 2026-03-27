@@ -51,7 +51,6 @@ export function ZonePage() {
 
             setNome('');
             fetchZone();
-            alert("Zona inserita!");
         } catch (err) {
             handleAxiosError(err, "Errore inserimento");
         } finally {
