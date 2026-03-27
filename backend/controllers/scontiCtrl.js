@@ -20,6 +20,16 @@ exports.createSconto = async (req, res) => {
             return res.status(400).json({ errore: "Nome sconto, valore e tipo sono obbligatori" });
         }
 
+        if (data_inizio && data_fine) {
+            if (new Date(data_inizio) > new Date(data_fine)) {
+                return res.status(400).json({ errore: "La data di inizio non può essere successiva alla data di fine" });
+            }
+
+            if (new Date(data_fine) < new Date(data_inizio)) {
+                return res.status(400).json({ errore: "La data di fine non può essere precedente alla data di inizio" });
+            }
+        }
+
         const result = await pool.query(
             'INSERT INTO sconti (nome_sconto, valore, tipo, data_inizio, data_fine) VALUES ($1, $2, $3, $4, $5) RETURNING *',
             [nome_sconto, valore, tipo, data_inizio, data_fine]
@@ -27,6 +37,10 @@ exports.createSconto = async (req, res) => {
         res.status(201).json(result.rows[0]);
     } catch (err) {
         console.error(err.message);
+
+        if (err.code === '23514') {
+            return res.status(400).json({ errore: "La data di inizio deve essere precedente alla data di fine." });
+        }
         res.status(500).json({ errore: "Errore durante la creazione del nuovo sconto" });
     }
 };
@@ -37,6 +51,14 @@ exports.updateSconto = async (req, res) => {
         const { id } = req.params;
         const { nome_sconto, valore, tipo, data_inizio, data_fine } = req.body; 
         
+        if (data_inizio && data_fine && new Date(data_inizio) > new Date(data_fine)) {
+            return res.status(400).json({ errore: "La data di inizio non può essere successiva alla data di fine" });
+        }
+
+        if (data_inizio && data_fine && new Date(data_fine) < new Date(data_inizio)) {
+            return res.status(400).json({ errore: "La data di fine non può essere precedente alla data di inizio" });
+        }        
+
         const query = `
             UPDATE sconti 
             SET 
@@ -57,6 +79,9 @@ exports.updateSconto = async (req, res) => {
         res.json(result.rows[0]); 
     } catch (err) {
         console.error(err.message);
+        if (err.code === '23514') {
+            return res.status(400).json({ errore: "La data di inizio deve essere precedente alla data di fine." });
+        }
         res.status(500).json({ errore: "Errore durante l'aggiornamento dello sconto" });
     }
 };
