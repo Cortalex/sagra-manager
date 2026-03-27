@@ -1,26 +1,30 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router";
+//import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router";
 import './ModeSelect.css';
 
 export const ModeSelect: React.FC = () => {
-  const [value, setValue] = useState<string>("home");
   const navigate = useNavigate();
+  const location = useLocation();
 
   const modeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = e.target.value;
-    setValue(selected);
 
-    console.log("Selezionato:", selected);
-
-    // navigazione
     if (selected === "home") navigate("/");
     if (selected === "settings") navigate("/settings");
     if (selected === "admin") navigate("/admin");
   };
 
+  // 👇 questo è il punto chiave
+  const getValueFromPath = () => {
+    if (location.pathname === "/") return "home";
+    if (location.pathname.startsWith("/settings")) return "settings";
+    if (location.pathname.startsWith("/admin")) return "admin";
+    return "home";
+  };
+
   return (
-    <select 
-      value={value} 
+    <select
+      value={getValueFromPath()}
       onChange={modeChange}
       className="mode-selector"
     >

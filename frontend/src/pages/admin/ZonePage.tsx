@@ -1,10 +1,12 @@
-
+//import { Header } from '../../components/Header';
 
 export function ZonePage() {
     
     return (
         <>
-            <p>Settings page</p>
+            <title>Admin @ Zone</title>
+            <div>temp page</div>
+
         </>
     );
 }

@@ -1,10 +1,13 @@
-
+//import { Header } from '../../components/Header';
 
 export function ArticoliPage() {
     
     return (
         <>
-            <p>Settings page</p>
+            <title>Admin @ Articoli</title>
+            <div>temp page</div>
+
+
         </>
     );
 }

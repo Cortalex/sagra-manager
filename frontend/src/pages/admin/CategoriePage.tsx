@@ -1,10 +1,12 @@
-
+//import { Header } from '../../components/Header';
 
 export function CategoriePage() {
     
     return (
         <>
-            <p>Settings page</p>
+            <title>Admin @ Categorie</title>
+            <div>temp page</div>
+
         </>
     );
 }

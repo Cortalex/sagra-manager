@@ -1,11 +1,13 @@
 //import { ModeSelect } from "../../components/ModeSelect";
+import { Header } from '../../components/Header';
 
 export function SettingsPage() {
     
     return (
         <>
             <title>Settings</title>
-            <div>SETTINGS</div>
+            <Header />
+            <div>temp page</div>
         </>
     );
 }
