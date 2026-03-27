@@ -37,6 +37,10 @@ exports.createSconto = async (req, res) => {
         res.status(201).json(result.rows[0]);
     } catch (err) {
         console.error(err.message);
+
+        if (err.code === '23514') {
+            return res.status(400).json({ errore: "La data di inizio deve essere precedente alla data di fine." });
+        }
         res.status(500).json({ errore: "Errore durante la creazione del nuovo sconto" });
     }
 };
@@ -75,6 +79,9 @@ exports.updateSconto = async (req, res) => {
         res.json(result.rows[0]); 
     } catch (err) {
         console.error(err.message);
+        if (err.code === '23514') {
+            return res.status(400).json({ errore: "La data di inizio deve essere precedente alla data di fine." });
+        }
         res.status(500).json({ errore: "Errore durante l'aggiornamento dello sconto" });
     }
 };
