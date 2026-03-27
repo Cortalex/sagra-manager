@@ -3,10 +3,9 @@
 export function ZonePage() {
     
     return (
-        <>
+        <div className="zone-page-container">
             <title>Admin @ Zone</title>
-            <div>temp page</div>
 
-        </>
+        </div>
     );
 }

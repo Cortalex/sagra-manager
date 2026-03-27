@@ -3,11 +3,9 @@
 export function IngredientiPage() {
     
     return (
-        <>
+        <div className="ingredienti-page-container">
             <title>Admin @ Ingredienti</title>
 
-            <div>temp page</div>
-
-        </>
+        </div>
     );
 }

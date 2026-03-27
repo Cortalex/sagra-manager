@@ -3,10 +3,9 @@
 export function ScontiPage() {
     
     return (
-        <>
+        <div className="sconti-page-container">
             <title>Admin @ Sconti</title>
 
-            <div>temp page</div>
-        </>
+        </div>
     );
 }
