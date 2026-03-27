@@ -1,5 +1,6 @@
 //import { ModeSelect } from "../../components/ModeSelect";
 import { Header } from '../../components/Header';
+import { ConfigurazionePage } from './ConfigurazionePage';
 
 export function SettingsPage() {
     
@@ -7,7 +8,7 @@ export function SettingsPage() {
         <>
             <title>Settings</title>
             <Header />
-            <div>temp page</div>
+            <ConfigurazionePage />
         </>
     );
 }
