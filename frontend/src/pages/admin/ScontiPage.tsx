@@ -75,7 +75,6 @@ export function ScontiPage() {
             setDataFine('');
 
             fetchSconti();
-            alert("Sconto inserito!");
         } catch (err) {
             handleAxiosError(err, "Errore durante l'inserimento");
         } finally {

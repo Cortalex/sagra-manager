@@ -8,7 +8,7 @@
 
 /* Container input nuova zona */
 .zone-input-container {
-    flex: 1;
+    flex: 0.6;
     background-color: #f9f9f9;
     border: 1px solid #e0e0e0;
     padding: 25px;
