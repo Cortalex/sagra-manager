@@ -13,12 +13,14 @@ export function CategoriePage() {
     const [visibile, setVisibile] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
 
-    // Stato per la lista delle categorie
     const [categorie, setCategorie] = useState<Categoria[]>([]);
+
+    // 🔹 stati per modifica
+    const [editingId, setEditingId] = useState<number | null>(null);
+    const [editedName, setEditedName] = useState<string>('');
 
     const API_URL = 'http://localhost:5000/api/categorie';
 
-    // Funzione per caricare le categorie
     const fetchCategorie = async () => {
         try {
             const response = await axios.get(API_URL);
@@ -32,7 +34,6 @@ export function CategoriePage() {
         fetchCategorie();
     }, []);
 
-    // Gestore errori centralizzato (mantiene la tua logica)
     const handleAxiosError = (err: unknown, defaultMsg: string) => {
         let messaggioErrore = defaultMsg;
         if (axios.isAxiosError(err)) {
@@ -54,7 +55,7 @@ export function CategoriePage() {
 
             setNome('');
             setVisibile(true);
-            fetchCategorie(); // Refresh della lista
+            fetchCategorie();
             alert("Categoria inserita!");
         } catch (err) {
             handleAxiosError(err, "Errore durante l'invio");
@@ -85,10 +86,41 @@ export function CategoriePage() {
         }
     };
 
+    // 🔹 EDIT
+    const startEdit = (cat: Categoria) => {
+        setEditingId(cat.id || null);
+        setEditedName(cat.nome_categoria);
+    };
+
+    const cancelEdit = () => {
+        setEditingId(null);
+        setEditedName('');
+    };
+
+    const saveEdit = async (id: number) => {
+        if (!editedName.trim()) {
+            alert("Il nome è obbligatorio");
+            return;
+        }
+
+        try {
+            await axios.put(`${API_URL}/${id}`, {
+                nome_categoria: editedName
+            });
+
+            setEditingId(null);
+            setEditedName('');
+            fetchCategorie();
+        } catch (err) {
+            handleAxiosError(err, "Errore durante la modifica");
+        }
+    };
+
     return (
         <div className="categorie-page-container">
             <div className="categorie-input-container">
                 <h3>Nuova Categoria</h3>
+
                 <label>Nome:</label>
                 <input
                     type="text"
@@ -113,6 +145,7 @@ export function CategoriePage() {
 
             <div className="categorie-display-container">
                 <h3>Elenco Categorie</h3>
+
                 <div className="scrollable-table-wrapper">
                     <table className="categorie-table">
                         <thead>
@@ -123,11 +156,25 @@ export function CategoriePage() {
                                 <th>Azioni</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             {categorie.map((cat) => (
                                 <tr key={cat.id}>
                                     <td>{cat.id}</td>
-                                    <td>{cat.nome_categoria}</td>
+
+                                    <td>
+                                        {editingId === cat.id ? (
+                                            <input
+                                                type="text"
+                                                value={editedName}
+                                                onChange={(e) => setEditedName(e.target.value)}
+                                                className="edit-input"
+                                            />
+                                        ) : (
+                                            cat.nome_categoria
+                                        )}
+                                    </td>
+
                                     <td>
                                         <button
                                             className={`status-badge ${cat.visibile ? 'v-on' : 'v-off'}`}
@@ -136,13 +183,41 @@ export function CategoriePage() {
                                             {cat.visibile ? 'Visibile' : 'Nascosta'}
                                         </button>
                                     </td>
+
                                     <td>
-                                        <button
-                                            className="delete-btn"
-                                            onClick={() => cat.id && handleDelete(cat.id)}
-                                        >
-                                            Elimina
-                                        </button>
+                                        {editingId === cat.id ? (
+                                            <>
+                                                <button
+                                                    className="save-btn"
+                                                    onClick={() => cat.id && saveEdit(cat.id)}
+                                                >
+                                                    Salva
+                                                </button>
+
+                                                <button
+                                                    className="cancel-btn"
+                                                    onClick={cancelEdit}
+                                                >
+                                                    Annulla
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <button
+                                                    className="edit-btn"
+                                                    onClick={() => startEdit(cat)}
+                                                >
+                                                    Modifica
+                                                </button>
+
+                                                <button
+                                                    className="delete-btn"
+                                                    onClick={() => cat.id && handleDelete(cat.id)}
+                                                >
+                                                    Elimina
+                                                </button>
+                                            </>
+                                        )}
                                     </td>
                                 </tr>
                             ))}

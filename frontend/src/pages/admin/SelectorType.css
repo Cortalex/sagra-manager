@@ -1,10 +1,33 @@
 .admin-mode-button {
     border: none;
-    font-size: 16px;
-    background-color: gray;
+    font-size: 0.95rem;
+    background-color: #6c757d; /* secondario */
     color: white;
-    border-radius: 8px;
-    padding: 8px;
+    border-radius: 6px;
+    padding: 10px 14px;
     cursor: pointer;
     margin: 8px;
+    font-weight: 600;
+
+    transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.admin-mode-button:hover {
+    background-color: #5a6268;
+}
+
+.admin-mode-button:active {
+    transform: translateY(1px);
+}
+
+.admin-mode-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
 }

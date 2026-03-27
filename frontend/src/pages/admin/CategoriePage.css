@@ -24,6 +24,7 @@
 .categorie-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
 }
 
 .categorie-table th {
@@ -46,6 +47,9 @@
     border-radius: 4px;
     border: none;
     cursor: pointer;
+
+    width: 100px;           /* 🔹 larghezza fissa */
+    text-align: center;
 }
 
 .v-on { background-color: #d4edda; color: #155724; }
@@ -60,9 +64,50 @@
     border-radius: 4px;
 }
 
+/* input durante modifica */
+.edit-input {
+    width: 100%;
+    padding: 6px;
+    border: 1.5px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+/* bottone modifica */
+.edit-btn {
+    background-color: #ffc107;
+    color: #333;
+    border: none;
+    padding: 5px 10px;
+    margin-right: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* bottone salva */
+.save-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-right: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* bottone annulla */
+.cancel-btn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
 .categorie-input-container {
     flex: 1;
-    background-color: #ffffff;
+    background-color: #f9f9f9;
     border: 1px solid #e0e0e0;
     padding: 25px;
     border-radius: 12px;
