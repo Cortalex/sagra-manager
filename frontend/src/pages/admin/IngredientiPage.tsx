@@ -11,8 +11,8 @@ interface Ingrediente {
 
 export function IngredientiPage() {
     const [nome, setNome] = useState<string>('');
-    const [prezzo, setPrezzo] = useState<number>(0);
-    const [quantita, setQuantita] = useState<number>(0);
+    const [prezzo, setPrezzo] = useState<string>('');
+    const [quantita, setQuantita] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
 
     const [ingredienti, setIngredienti] = useState<Ingrediente[]>([]);
@@ -54,12 +54,16 @@ export function IngredientiPage() {
 
         setLoading(true);
         try {
-            const nuovoIngrediente: Ingrediente = { nome_ingrediente: nome, prezzo, quantita };
+            const nuovoIngrediente: Ingrediente = {
+                nome_ingrediente: nome,
+                prezzo: parseFloat(prezzo) || 0,
+                quantita: parseInt(quantita) || 0
+            };
             await axios.post(API_URL, nuovoIngrediente);
 
             setNome('');
-            setPrezzo(0);
-            setQuantita(0);
+            setPrezzo('');
+            setQuantita('');
             fetchIngredienti();
         } catch (err) {
             handleAxiosError(err, "Errore durante l'inserimento");
@@ -131,16 +135,16 @@ export function IngredientiPage() {
                 <input
                     type="number"
                     value={prezzo}
-                    onChange={(e) => setPrezzo(parseFloat(e.target.value))}
-                    placeholder="Prezzo"
+                    onChange={(e) => setPrezzo(e.target.value)}
+                    placeholder="0.00"
                 />
 
                 <label>Quantità:</label>
                 <input
                     type="number"
                     value={quantita}
-                    onChange={(e) => setQuantita(parseInt(e.target.value))}
-                    placeholder="Quantità"
+                    onChange={(e) => setQuantita(e.target.value)}
+                    placeholder="0"
                 />
 
                 <button onClick={handleInsert} disabled={loading}>
@@ -190,7 +194,7 @@ export function IngredientiPage() {
                                                 className="edit-input"
                                             />
                                         ) : (
-                                            ing.prezzo
+                                            `${ing.prezzo.toFixed(2)} €`
                                         )}
                                     </td>
 

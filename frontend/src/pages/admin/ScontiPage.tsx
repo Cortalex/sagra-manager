@@ -13,7 +13,7 @@ interface Sconto {
 
 export function ScontiPage() {
     const [nome, setNome] = useState<string>('');
-    const [valore, setValore] = useState<number>(0);
+    const [valore, setValore] = useState<string>('');
     const [tipo, setTipo] = useState<string>('%');
     const [dataInizio, setDataInizio] = useState<string>('');
     const [dataFine, setDataFine] = useState<string>('');
@@ -59,7 +59,7 @@ export function ScontiPage() {
         try {
             const nuovoSconto: Sconto = {
                 nome_sconto: nome,
-                valore,
+                valore: Number(valore),
                 tipo,
                 data_inizio: dataInizio || undefined,
                 data_fine: dataFine || undefined,
@@ -69,7 +69,7 @@ export function ScontiPage() {
 
             // Reset input
             setNome('');
-            setValore(0);
+            setValore('');
             setTipo('%');
             setDataInizio('');
             setDataFine('');
@@ -138,8 +138,8 @@ export function ScontiPage() {
                 <input
                     type="number"
                     value={valore}
-                    onChange={(e) => setValore(Number(e.target.value))}
-                    placeholder="Valore sconto"
+                    onChange={(e) => setValore(e.target.value)}
+                    placeholder="0"
                 />
 
                 <label>Tipo:</label>
