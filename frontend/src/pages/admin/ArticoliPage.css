@@ -72,6 +72,10 @@
     background-color: #0056b3;
 }
 
+.articoli-input-container button:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
 .articoli-input-container button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
