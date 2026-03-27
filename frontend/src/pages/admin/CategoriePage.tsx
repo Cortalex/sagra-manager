@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import './CategoriePage.css';
 
@@ -12,7 +12,6 @@ export function CategoriePage() {
     const [nome, setNome] = useState<string>('');
     const [visibile, setVisibile] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
-
     const [categorie, setCategorie] = useState<Categoria[]>([]);
 
     // 🔹 stati per modifica
@@ -21,18 +20,19 @@ export function CategoriePage() {
 
     const API_URL = 'http://localhost:5000/api/categorie';
 
-    const fetchCategorie = async () => {
+    // 🔹 fetchCategorie wrapped in useCallback
+    const fetchCategorie = useCallback(async () => {
         try {
             const response = await axios.get(API_URL);
             setCategorie(response.data);
         } catch (err) {
             handleAxiosError(err, "Errore nel caricamento categorie");
         }
-    };
+    }, []); // vuoto → non cambia mai
 
     useEffect(() => {
         fetchCategorie();
-    }, []);
+    }, [fetchCategorie]); // adesso ESLint è felice
 
     const handleAxiosError = (err: unknown, defaultMsg: string) => {
         let messaggioErrore = defaultMsg;
@@ -55,7 +55,7 @@ export function CategoriePage() {
 
             setNome('');
             setVisibile(true);
-            fetchCategorie();
+            fetchCategorie(); // chiama la funzione aggiornata
         } catch (err) {
             handleAxiosError(err, "Errore durante l'invio");
         } finally {
@@ -76,9 +76,7 @@ export function CategoriePage() {
 
     const toggleVisibile = async (cat: Categoria) => {
         try {
-            await axios.put(`${API_URL}/${cat.id}`, {
-                visibile: !cat.visibile
-            });
+            await axios.put(`${API_URL}/${cat.id}`, { visibile: !cat.visibile });
             fetchCategorie();
         } catch (err) {
             handleAxiosError(err, "Errore durante l'aggiornamento");
@@ -103,10 +101,7 @@ export function CategoriePage() {
         }
 
         try {
-            await axios.put(`${API_URL}/${id}`, {
-                nome_categoria: editedName
-            });
-
+            await axios.put(`${API_URL}/${id}`, { nome_categoria: editedName });
             setEditingId(null);
             setEditedName('');
             fetchCategorie();
@@ -186,35 +181,13 @@ export function CategoriePage() {
                                     <td>
                                         {editingId === cat.id ? (
                                             <>
-                                                <button
-                                                    className="save-btn"
-                                                    onClick={() => cat.id && saveEdit(cat.id)}
-                                                >
-                                                    Salva
-                                                </button>
-
-                                                <button
-                                                    className="cancel-btn"
-                                                    onClick={cancelEdit}
-                                                >
-                                                    Annulla
-                                                </button>
+                                                <button className="save-btn" onClick={() => cat.id && saveEdit(cat.id)}>Salva</button>
+                                                <button className="cancel-btn" onClick={cancelEdit}>Annulla</button>
                                             </>
                                         ) : (
                                             <>
-                                                <button
-                                                    className="edit-btn"
-                                                    onClick={() => startEdit(cat)}
-                                                >
-                                                    Modifica
-                                                </button>
-
-                                                <button
-                                                    className="delete-btn"
-                                                    onClick={() => cat.id && handleDelete(cat.id)}
-                                                >
-                                                    Elimina
-                                                </button>
+                                                <button className="edit-btn" onClick={() => startEdit(cat)}>Modifica</button>
+                                                <button className="delete-btn" onClick={() => cat.id && handleDelete(cat.id)}>Elimina</button>
                                             </>
                                         )}
                                     </td>

@@ -51,6 +51,12 @@
 
     width: 100px;           /* 🔹 larghezza fissa */
     text-align: center;
+    transition: transform 0.1s, background-color 0.2s;
+}
+
+.status-badge:hover {
+    transform: translateY(-1px);
+    opacity: 0.9;
 }
 
 .v-on { background-color: #d4edda; color: #155724; }

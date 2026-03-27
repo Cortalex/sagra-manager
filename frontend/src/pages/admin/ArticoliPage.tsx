@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import './ArticoliPage.css';
 
@@ -41,40 +41,38 @@ export function ArticoliPage() {
     const API_CATEGORIE = 'http://localhost:5000/api/categorie';
     const API_ZONE = 'http://localhost:5000/api/zone';
 
-    // Carica articoli
-    const fetchArticoli = async () => {
+    const fetchArticoli = useCallback(async () => {
         try {
             const response = await axios.get(API_ARTICOLI);
             setArticoli(response.data);
         } catch (err) {
             handleAxiosError(err, "Errore nel caricamento articoli");
         }
-    };
+    }, []);
 
-    // Carica categorie e zone
-    const fetchCategorie = async () => {
+    const fetchCategorie = useCallback(async () => {
         try {
             const response = await axios.get(API_CATEGORIE);
             setCategorie(response.data);
         } catch (err) {
             handleAxiosError(err, "Errore nel caricamento categorie");
         }
-    };
+    }, []);
 
-    const fetchZone = async () => {
+    const fetchZone = useCallback(async () => {
         try {
             const response = await axios.get(API_ZONE);
             setZone(response.data);
         } catch (err) {
             handleAxiosError(err, "Errore nel caricamento zone");
         }
-    };
+    }, []);
 
     useEffect(() => {
         fetchArticoli();
         fetchCategorie();
         fetchZone();
-    }, []);
+    }, [fetchArticoli, fetchCategorie, fetchZone]);
 
     const handleAxiosError = (err: unknown, defaultMsg: string) => {
         let messaggioErrore = defaultMsg;
