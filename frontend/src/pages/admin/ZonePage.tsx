@@ -141,6 +141,7 @@ export function ZonePage() {
                                             type="text"
                                             value={editedName}
                                             onChange={(e) => setEditedName(e.target.value)}
+                                            className='edit-input'
                                         />
                                     ) : (
                                         zona.nome_zona
