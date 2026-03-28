@@ -27,7 +27,8 @@ CREATE TABLE IF NOT EXISTS public.ingredienti (
     id serial4 PRIMARY KEY,
     nome_ingrediente varchar(255) NULL,
     prezzo int4 NULL,
-    quantita int4 NULL
+    quantita int4 NULL,
+    obbligatorio bool DEFAULT false NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.configurazione (
@@ -40,7 +41,10 @@ CREATE TABLE IF NOT EXISTS public.configurazione (
     area varchar NULL,
     cassa varchar NULL,
     usa_smartphone_tavoli bool DEFAULT false NULL,
-    usa_monitor_cucina bool DEFAULT false NULL
+    usa_monitor_cucina bool DEFAULT false NULL,
+    obbligo_nome_cliente boolean DEFAULT false,
+    obbligo_numero_tavolo boolean DEFAULT false,
+    obbligo_coperti boolean DEFAULT false
 );
 
 CREATE TABLE IF NOT EXISTS public.categorie (
@@ -99,4 +103,11 @@ CREATE TABLE IF NOT EXISTS public.righe_ordine (
     note varchar(255) NULL,
     id_ordine int4 NULL REFERENCES public.ordini(id) ON DELETE CASCADE,
     id_articolo int4 NULL REFERENCES public.articoli(id)
+);
+
+CREATE TABLE IF NOT EXISTS public.righe_ordine_ingredienti (
+    id_riga_ordine int4 NOT NULL REFERENCES public.righe_ordine(id) ON DELETE CASCADE,
+    id_ingrediente int4 NOT NULL REFERENCES public.ingredienti(id) ON DELETE CASCADE,
+    prezzo_aggiuntivo int4 DEFAULT 0,
+    PRIMARY KEY (id_riga_ordine, id_ingrediente)
 );

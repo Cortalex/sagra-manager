@@ -14,13 +14,13 @@ exports.getConfigurazione = async (req, res) => {
 // Insert
 exports.createConfigurazione = async (req, res) => {
     try {
-        const { nome_sagra, password, costo_coperto, costo_asporto, quantita_soglia, area, cassa, usa_smartphone_tavoli,  usa_monitor_cucina } = req.body; 
+        const { nome_sagra, password, costo_coperto, costo_asporto, quantita_soglia, area, cassa, usa_smartphone_tavoli,  usa_monitor_cucina, obbligo_nome_cliente, obbligo_numero_tavolo, obbligo_coperti } = req.body; 
         
         if (!nome_sagra) return res.status(400).json({ errore: "Il nome della sagra è obbligatorio" });
 
         const result = await pool.query(
-            'INSERT INTO configurazione (nome_sagra, password, costo_coperto, costo_asporto, quantita_soglia, area, cassa, usa_smartphone_tavoli, usa_monitor_cucina) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
-            [nome_sagra, password, costo_coperto || 0, costo_asporto || 0, quantita_soglia || 0, area, cassa, usa_smartphone_tavoli,  usa_monitor_cucina]
+            'INSERT INTO configurazione (nome_sagra, password, costo_coperto, costo_asporto, quantita_soglia, area, cassa, usa_smartphone_tavoli, usa_monitor_cucina, obbligo_nome_cliente, obbligo_numero_tavolo, obbligo_coperti) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *',
+            [nome_sagra, password, costo_coperto || 0, costo_asporto || 0, quantita_soglia || 0, area, cassa, usa_smartphone_tavoli,  usa_monitor_cucina, obbligo_nome_cliente, obbligo_numero_tavolo, obbligo_coperti]
         );
         res.status(201).json(result.rows[0]);
     } catch (err) {
@@ -33,7 +33,7 @@ exports.createConfigurazione = async (req, res) => {
 exports.updateConfigurazione = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nome_sagra, password, costo_coperto, costo_asporto, quantita_soglia, area, cassa, usa_smartphone_tavoli,  usa_monitor_cucina } = req.body;
+        const { nome_sagra, password, costo_coperto, costo_asporto, quantita_soglia, area, cassa, usa_smartphone_tavoli,  usa_monitor_cucina, obbligo_nome_cliente, obbligo_numero_tavolo, obbligo_coperti } = req.body;
         
         const query = `
             UPDATE configurazione 
@@ -46,11 +46,14 @@ exports.updateConfigurazione = async (req, res) => {
                 area = COALESCE($6, area),
                 cassa = COALESCE($7, cassa),
                 usa_smartphone_tavoli = COALESCE($8, usa_smartphone_tavoli),
-                usa_monitor_cucina = COALESCE($9, usa_monitor_cucina)
-            WHERE id = $10 
+                usa_monitor_cucina = COALESCE($9, usa_monitor_cucina),
+                obbligo_nome_cliente = COALESCE($10, obbligo_nome_cliente),
+                obbligo_numero_tavolo = COALESCE($11, obbligo_numero_tavolo),
+                obbligo_coperti = COALESCE($12, obbligo_coperti)
+            WHERE id = $13 
             RETURNING *`;
 
-        const result = await pool.query(query, [nome_sagra, password, costo_coperto, costo_asporto, quantita_soglia, area, cassa, usa_smartphone_tavoli,  usa_monitor_cucina, id]);
+        const result = await pool.query(query, [nome_sagra, password, costo_coperto, costo_asporto, quantita_soglia, area, cassa, usa_smartphone_tavoli,  usa_monitor_cucina, obbligo_nome_cliente, obbligo_numero_tavolo, obbligo_coperti, id]);
 
         if (result.rows.length === 0) {
             return res.status(404).json({ errore: "Configurazione non trovata" });
